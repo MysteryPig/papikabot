@@ -311,7 +311,7 @@ async def on_message(message):
     elif message.content.startswith('{lock'):
         if len(message.mentions) == 0:
             await client.send_message(message.channel, 'You must specify a user')
- ://alternativeto.net/software/jstest-gtk/       else:
+        else:
             lockedstring = ''
             for i in message.mentions:
                 locked.append(i.id)
