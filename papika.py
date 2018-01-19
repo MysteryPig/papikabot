@@ -107,9 +107,10 @@ def mpnext(keyword):
             return alist[anum+1]
     return alist[randint(0, len(alist)-1)]
     
-def mpadd():
-    pass
-    
+def mpadd(keyword, uid, content):
+    with open("stories/"+keyword, 'a') as f:
+        pass
+
 @client.event
 async def on_reaction_add(reaction, user):
     message = reaction.message
@@ -279,6 +280,7 @@ async def on_message(message):
     
     elif message.content.startswith('{say'):
         await client.send_message(message.channel, message.content[5:])
+        await client.delete_message(message)
 
     #^^^ public commands vvv private commands
 
@@ -309,7 +311,7 @@ async def on_message(message):
     elif message.content.startswith('{lock'):
         if len(message.mentions) == 0:
             await client.send_message(message.channel, 'You must specify a user')
-        else:
+ ://alternativeto.net/software/jstest-gtk/       else:
             lockedstring = ''
             for i in message.mentions:
                 locked.append(i.id)
