@@ -264,7 +264,7 @@ async def on_message(message):
         lines = shlex.split(message.content)
         await client.send_message(message.channel, lines[randint(1, len(lines)-1)])
 
-    elif message.content.startswith("{query"):
+    elif message.content.startswith("{query") or message.content.startswith("{question"):
         lines = shlex.split(message.content)
         await client.send_message(message.channel, "Question: " + lines[1])
         await client.send_message(message.channel, "Answer: " + lines[randint(2, len(lines)-1)])
