@@ -1,4 +1,5 @@
 import discord
+import datetime
 import asyncio
 from random import randint
 from enum import Enum
@@ -11,7 +12,7 @@ shoved = 0
 addchecks = []
 balex = "210959959905665026"
 raihanserver = "341677393120854016"
-votenum = 4
+votenum = 3
 
 
 
@@ -140,12 +141,15 @@ async def on_ready():
     await client.send_message(await client.get_user_info(balex), "Papika Started Successfully")
     #raihanserver = await client.get_server(raihanserver)
 
+messagetimer = 0;
 @client.event
 async def on_message(message):
     global locked
+    global messagetimer
     global mod
     global disturb
     global shoved
+    messagetimer+=1
    # for i in client.servers:
     #    me = i.me;
    # print(hash(message.author))
@@ -256,8 +260,19 @@ async def on_message(message):
         await client.send_message(message.channel, "Ping ping. I'm a submarine!")
     
     elif message.content.startswith("{decide"):
-        lines = message.content.split()
-        await client.send_message(message.channel, lines[randint(1, lines.length)])
+        if '"' in message.content:
+            index = message.content.find('"', 0)
+            index = message.content.find('"', index)
+            content = message.content[index+1:]
+            lines = content.split()
+            await client.send_message(message.channel, lines[randint(0, len(lines)-1)])
+        else:
+            lines = message.content.split()
+            await client.send_message(message.channel, lines[randint(1, len(lines)-1)])
+
+    elif message.content.startswith("{listlocks"):
+        for i in locked:
+            print(i)
 
     elif message.content.startswith("{fortune"):
         pass
@@ -282,6 +297,10 @@ async def on_message(message):
         await client.send_message(message.channel, message.content[5:])
         await client.delete_message(message)
 
+    elif message.content.startswith('}'):
+        await client.send_message(message.channel, message.content[1:])
+        await client.delete_message(message)
+
     #^^^ public commands vvv private commands
 
 
@@ -290,13 +309,16 @@ async def on_message(message):
         await client.send_message(message.channel, modd.name + ' is mod, fuck off. ')
 
     elif message.content.startswith('{modme') and mod == 0:
-        mod = message.author.id;
-        await client.send_message(message.channel, message.author.mention + ' is my mod.')
-
+        if message.author.id == balex:
+            mod = message.author.id;
+            await client.send_message(message.channel, message.author.mention + ' is my mod.')
+        else:
+            await client.send_message(message.channel, "lol no, fuck off.")
+    
     elif message.content.startswith('{unlock'):
         for i in locked:
-            locked.remove("i")
-        await client.add_reaction(message, "\u0001f44c")
+            locked.remove(i)
+        await client.add_reaction(message, "\u2714")
 
     elif message.content.startswith('{toggle'):
         if disturb:
@@ -351,7 +373,9 @@ async def on_message(message):
             if i == message.author.id:
                 await client.send_message(message.channel, getRandomLine("PapiLines"))
     #print(shoved)
-
+    
+    if messagetimer % 20 == 0:
+        print("timestamp: %d:%d:%d" % (datetime.time.hours, datetime.time.minutes, datetime.time.seconds))
 
     for n in range(len(addchecks)):
         message = addchecks[n]
@@ -360,7 +384,10 @@ async def on_message(message):
                 if reaction.emoji == "💾":
                     print(message.content[5:] + " (added)")
                     await client.add_reaction(message, "👌")
-                    addLine(message.content[5:])
+                    if message.content.startswith("{add"):
+                        addLine(message.content[5:])
+                    else:
+                        addLine(message.content)
                     addchecks.pop(n)
                 if reaction.emoji == "🗑":
                     print(message.content[5:] + " (votedout)")
