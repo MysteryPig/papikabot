@@ -1,4 +1,5 @@
 import discord
+import shlex
 import datetime
 import asyncio
 from random import randint
@@ -260,15 +261,13 @@ async def on_message(message):
         await client.send_message(message.channel, "Ping ping. I'm a submarine!")
     
     elif message.content.startswith("{decide"):
-        if '"' in message.content:
-            index = message.content.find('"', 0)
-            index = message.content.find('"', index)
-            content = message.content[index+1:]
-            lines = content.split()
-            await client.send_message(message.channel, lines[randint(0, len(lines)-1)])
-        else:
-            lines = message.content.split()
-            await client.send_message(message.channel, lines[randint(1, len(lines)-1)])
+        lines = shlex.split(message.content)
+        await client.send_message(message.channel, lines[randint(1, len(lines)-1)])
+
+    elif message.content.startswith("{query"):
+        lines = shlex.split(message.content)
+        await client.send_message(message.channel, "Question: " + lines[1])
+        await client.send_message(message.channel, "Answer: " + lines[randint(2, len(lines)-1)])
 
     elif message.content.startswith("{listlocks"):
         for i in locked:
