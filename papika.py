@@ -118,7 +118,7 @@ async def on_reaction_add(reaction, user):
     message = reaction.message
     if reaction.emoji == "🥘" and user.id != reaction.message.author.id:
         addshitcoin(message.author.id)
-    elif reaction.emoji == "⚖":
+    elif reaction.emoji == "⚖" and reaction.count == 1 or reaction.count == 0:
         await client.add_reaction(message, "⚖")
         await client.add_reaction(message, "💾")
         await client.add_reaction(message, "🗑")
