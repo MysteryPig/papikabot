@@ -14,7 +14,7 @@ addchecks = []
 balex = "210959959905665026"
 raihanserver = "341677393120854016"
 votenum = 3
-
+percentchanceofspeaking = 20
 
 
 def addshitcoin(uid, up=True):
@@ -160,6 +160,28 @@ async def on_message(message):
 
     if message.author.bot:
         print("this is a bot")
+        
+    elif message.content.startswith("{{"):
+        if message.author.id != balex:
+            await client.send_message(message.channel, "Only Balex Himself can use {{ commands.")
+        elif message.content.startswith('{{unlock'):
+            for i in locked:
+                locked.remove(i)
+                    await client.add_reaction(message, "\u2714")
+        elif message.content.startswith('{{toggle'):
+            if disturb:
+                await client.send_message(message.channel, 'Disturbance sensor disengaged')
+                await client.change_presence(status = discord.Status.idle)
+       	    else:
+                await client.send_message(message.channel, 'Disturbance sensor engaged')
+                await client.change_presence(status = discord.Status.online)
+            disturb = not disturb
+        elif message.content.startswith("{listlocks"):
+            for i in locked:
+                print(i)
+
+
+
 
     elif message.content.startswith('{lockme'):
         locked.append(message.author.id)
@@ -286,9 +308,6 @@ async def on_message(message):
         await client.send_message(message.channel, "Question: " + lines[1])
         await client.send_message(message.channel, "Answer: " + lines[randint(2, len(lines)-1)])
 
-    elif message.content.startswith("{listlocks"):
-        for i in locked:
-            print(i)
 
     elif message.content.startswith("{fortune"):
         pass
@@ -325,27 +344,9 @@ async def on_message(message):
         await client.send_message(message.channel, modd.name + ' is mod, fuck off. ')
 
     elif message.content.startswith('{modme') and mod == 0:
-        if message.author.id == balex:
-            mod = message.author.id;
-            await client.send_message(message.channel, message.author.mention + ' is my mod.')
-        else:
-            await client.send_message(message.channel, "lol no, fuck off.")
+        mod = message.author.id;
+        await client.send_message(message.channel, message.author.mention + ' is my mod.')
     
-    elif message.content.startswith('{unlock'):
-        for i in locked:
-            locked.remove(i)
-        await client.add_reaction(message, "\u2714")
-
-    elif message.content.startswith('{toggle'):
-        if disturb:
-            await client.send_message(message.channel, 'Disturbance sensor disengaged')
-            await client.change_presence(status = discord.Status.idle)
-        else:
-            await client.send_message(message.channel, 'Disturbance sensor engaged')
-            await client.change_presence(status = discord.Status.online)
-        disturb = not disturb
-
-
     elif message.content.startswith('{lock'):
         if len(message.mentions) == 0:
             await client.send_message(message.channel, 'You must specify a user')
@@ -384,14 +385,12 @@ async def on_message(message):
     elif message.server.id == raihanserver:
         print("This is raihans server")
 
-    elif disturb and not False:
+    elif disturb and randint(0, 100) < percentchanceofspeaking:
         for i in locked:
             if i == message.author.id:
                 await client.send_message(message.channel, getRandomLine("PapiLines"))
     #print(shoved)
     
-    if messagetimer % 20 == 0:
-        print("timestamp: %d:%d:%d" % (datetime.time.hours, datetime.time.minutes, datetime.time.seconds))
 
     for n in range(len(addchecks)):
         message = addchecks[n]
