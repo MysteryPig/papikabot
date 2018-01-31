@@ -247,12 +247,29 @@ async def on_message(message):
         i = 1
         for w in sorted(people, key=people.get, reverse=True):
             user = await client.get_user_info(w)
-            result.append("#"+str(i)+": "+user.mention+": "+str(people[w]))
+            result.append("#"+str(i)+": "+user.name+": "+str(people[w]))
             i+=1
-            if i >= 3:
+            if i >= 4:
                 break
         for line in result:
             await client.send_message(message.channel, line)
+
+    elif message.content.startswith('{rank'):
+	people = {}
+        target = message.author.id
+        result = ""
+	with open("scores/coins") as coins:
+            for line in coins.readlines():
+                x = line.index(":")
+                people[line[:x]] = int(line[x+1:])
+        i = 1
+        for w in sorted(people, key=people.get, reverse=True):
+            user = await client.get_user_info(w)
+            if user.id == target:
+                result = "#"+str(i)+": "+user.name+": "+str(people[w])
+                break
+            i+=1
+        await client.send_message(message.channel, line)
     
     elif message.content.startswith('{help'):
         await client.send_message(message.channel, "Fucking noob. Figure it out.")
