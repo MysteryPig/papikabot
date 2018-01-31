@@ -255,10 +255,10 @@ async def on_message(message):
             await client.send_message(message.channel, line)
 
     elif message.content.startswith('{rank'):
-	people = {}
+        people = {}
         target = message.author.id
         result = ""
-	with open("scores/coins") as coins:
+        with open("scores/coins") as coins:
             for line in coins.readlines():
                 x = line.index(":")
                 people[line[:x]] = int(line[x+1:])
