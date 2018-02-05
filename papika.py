@@ -113,6 +113,18 @@ def mpadd(keyword, uid, content):
     with open("stories/"+keyword, 'a') as f:
         pass
 
+def eat(uid, food):
+    try:
+        with open("food/"+uid, 'a') as d:
+            d.write(food)
+            return "Ate " + food + "."
+        except FileNotFoundError:
+            with open("food/"+uid, 'w+') as d:
+                d.write(food)
+                return "Started an eating log."
+
+    
+
 @client.event
 async def on_reaction_add(reaction, user):
     message = reaction.message
@@ -278,6 +290,9 @@ async def on_message(message):
                 break
         for line in result:
             await client.send_message(message.channel, line)
+
+    elif message.content.startswith('{eat'):
+        await client.send_message(message.channel, message.content[5:])
 
     elif message.content.startswith('{rank'):
         people = {}
