@@ -12,7 +12,7 @@ disturb = True
 shoved = 0
 addchecks = []
 balex = "210959959905665026"
-raihanserver = "341677393120854016"
+raihanserver = "341677393"#120854016"
 votenum = 3
 percentchanceofspeaking = 20
 
@@ -123,8 +123,11 @@ async def on_reaction_add(reaction, user):
         await client.add_reaction(message, "💾")
         await client.add_reaction(message, "🗑")
         addchecks.append(message)
-    elif reaction.emoji == "⬆" and message.author.id == balex:
+    elif reaction.emoji == "⬆" and user.id == balex:
         addLine(message.content)
+    elif reaction.emoji == "    ?":
+        locked.append(message.author.id)
+        await client.add_reaction(message, "👌")
         
     
 @client.event
@@ -167,7 +170,7 @@ async def on_message(message):
         elif message.content.startswith('{{unlock'):
             for i in locked:
                 locked.remove(i)
-                    await client.add_reaction(message, "\u2714")
+                await client.add_reaction(message, "\u2714")
         elif message.content.startswith('{{toggle'):
             if disturb:
                 await client.send_message(message.channel, 'Disturbance sensor disengaged')
@@ -176,7 +179,7 @@ async def on_message(message):
                 await client.send_message(message.channel, 'Disturbance sensor engaged')
                 await client.change_presence(status = discord.Status.online)
             disturb = not disturb
-        elif message.content.startswith("{listlocks"):
+        elif message.content.startswith("{{listlocks"):
             for i in locked:
                 print(i)
 
