@@ -292,7 +292,7 @@ async def on_message(message):
             await client.send_message(message.channel, line)
 
     elif message.content.startswith('{eat'):
-        await client.send_message(message.channel, message.content[5:])
+        await client.send_message(message.channel, eat(message.author.id, message.content[5:]))
 
     elif message.content.startswith('{rank'):
         people = {}
@@ -329,6 +329,15 @@ async def on_message(message):
 
     elif message.content.startswith("{fortune"):
         pass
+
+    elif message.content.startswith("{eaten"):
+        try:
+            with open("food/"+message.author.id, 'r') as f:
+                aaaa = f.readlines
+        except FileNotFoundError:
+            aaaa = ["Have you eaten anything yet?"]
+        for a in aaaa:
+            await client.send_message(message.channel, a);
 
     elif message.content.startswith('{pat'):
         final = ''
