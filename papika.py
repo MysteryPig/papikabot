@@ -2,6 +2,7 @@ import discord
 import shlex
 import datetime
 import asyncio
+import os
 from random import randint
 from enum import Enum
 from numbers import Number
@@ -116,11 +117,11 @@ def mpadd(keyword, uid, content):
 def eat(uid, food):
     try:
         with open("food/"+uid, 'a') as d:
-            d.write(food)
+            d.write(food + '\n')
             return "Ate " + food + "."
-        except FileNotFoundError:
+    except FileNotFoundError:
             with open("food/"+uid, 'w+') as d:
-                d.write(food)
+                d.write(food + '\n')
                 return "Started an eating log."
 
     
@@ -210,6 +211,16 @@ async def on_message(message):
         await client.add_reaction(message, "💾")
         await client.add_reaction(message, "🗑")
         addchecks.append(message)
+
+    elif message.content.startswith("{eaten"):
+        try:
+            with open("food/"+message.author.id, 'r') as f:
+                aaaa = f.readlines()
+        except FileNotFoundError:
+            aaaa = ["Have you eaten anything yet?"]
+        for a in aaaa:
+            await client.send_message(message.channel, a);
+
 
     #if message.content.startswith('{')
 
@@ -326,18 +337,11 @@ async def on_message(message):
         await client.send_message(message.channel, "Question: " + lines[1])
         await client.send_message(message.channel, "Answer: " + lines[randint(2, len(lines)-1)])
 
+    elif message.content.startswith('{rmeat'):
+        os.remove('food/'+message.author.id)
 
     elif message.content.startswith("{fortune"):
         pass
-
-    elif message.content.startswith("{eaten"):
-        try:
-            with open("food/"+message.author.id, 'r') as f:
-                aaaa = f.readlines
-        except FileNotFoundError:
-            aaaa = ["Have you eaten anything yet?"]
-        for a in aaaa:
-            await client.send_message(message.channel, a);
 
     elif message.content.startswith('{pat'):
         final = ''
