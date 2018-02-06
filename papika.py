@@ -359,11 +359,11 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "You aren't locked. Baaaaka.")
     
-    elif message.content.startswith('{say'):
+    elif message.content.startswith('{say') and not message.mention_everyone:
         await client.send_message(message.channel, message.content[5:])
         await client.delete_message(message)
 
-    elif message.content.startswith('}'):
+    elif message.content.startswith('}') and not message.mention_everyone:
         await client.send_message(message.channel, message.content[1:])
         await client.delete_message(message)
 
