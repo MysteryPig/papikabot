@@ -15,7 +15,7 @@ addchecks = []
 balex = "210959959905665026"
 raihanserver = "341677393"#120854016"
 votenum = 3
-percentchanceofspeaking = 20
+percentchanceofspeaking = 5
 
 
 def addshitcoin(uid, up=True):
@@ -181,8 +181,8 @@ async def on_message(message):
         if message.author.id != balex:
             await client.send_message(message.channel, "Only Balex Himself can use {{ commands.")
         elif message.content.startswith('{{unlock'):
-            for i in locked:
-                locked.remove(i)
+            for i in range(len(locked)):
+                locked.pop(0)
                 await client.add_reaction(message, "\u2714")
         elif message.content.startswith('{{toggle'):
             if disturb:
@@ -325,7 +325,7 @@ async def on_message(message):
     elif message.content.startswith('{help'):
         await client.send_message(message.channel, "Fucking noob. Figure it out.")
         
-    elif "ping" in message.content.lower() and not message.author.bot:
+    elif "ping" in message.content.lower() and not message.author.bot and randint(1, 100) < percentchanceofspeaking:
         await client.send_message(message.channel, "Ping ping. I'm a submarine!")
     
     elif message.content.startswith("{decide"):
