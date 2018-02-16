@@ -646,6 +646,71 @@ class Battle:
         elif action == "lewd":
             player.lewd()
             return "*" + player.getWaifuQuote() + "* " + player.waifuname + " does lewd things to " + player.mention + "... ;)";
+
+class tOrDGame(self):
+    #stati
+    #players - waiting for more players
+    #waiting - waiting for a question to be asked
+    #truth - waiting for a player to answer
+    #w:(id number) - waiting for a specific player to create a prompt
+    #t:(id number) - waiting for a specific player to answer a question
+    #d:(id number) - waiting for a specific player to confirm they have completed a dare
+    #dare - waiting for someone to accept
+    def __init__(self, first, channel):
+        self.players = [first]
+        self.yetToRespond = []
+        self.channelsToSendIn = [channel]
+        self.status = "players"
+        self.currentprompt = ""
+    def join(self, player):
+        if self.status == "players":
+            self.players.push(player)
+            if len(self.players) >= 3:
+                return True
+        return False
+    def addChannel(self, channel):
+        if self.status == "players":
+            self.channelsToSendIn.push(channel)
+            return True
+        return False
+    def begin(self):
+        if len(self.players) >= 3:
+            self.status = "waiting"
+            return True
+        return False
+    def setTruth(self, prompt):
+        if self.status == "waiting":
+            self.yetToRespond = list(self.players)
+            self.currentprompt = prompt
+            self.status = "truth"
+            return True
+        return False
+    def setDare(self, prompt):
+        if self.status == "waiting":
+            self.currentprompt = prompt
+            self.status = "dare"
+    def next(self):
+        if self.status == "players":
+            if len(self.players) >= 3:
+                return "Ready to start with {tdbegin."
+            return "Waiting for 3 players."
+        elif self.status == "waiting":
+            return "Anyone can propose a truth with {t or a dare with {d"
+        elif self.status == "truth":
+            ret = ""
+            for pid in self.yetToRespond:
+                ret += await client.get_user_info(pid).name
+            return "Waiting for answers! " + ret
+        elif self.status == "dare":
+            return "Waiting for someone to accept the dare with {tordaccept"
+        elif self.status.startswith("w:"):
+            return await client.get_user_info(self.status[1:]).name + ", waiting on your prompt"
+        elif self.status.startswith("t:"):
+            return await client.get_user_info(self.status[1:]).name + ", waiting on your answer"
+        elif self.status.startswith("d:"):
+            return await client.get_user_info(self.status[1:]).name + ", waiting on your confirmation"
+
+
 with open('key') as f:
     key = f.read().rstrip()
     client.run(key)
