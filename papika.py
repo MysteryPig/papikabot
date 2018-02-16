@@ -262,13 +262,13 @@ async def on_message(message):
         await client.add_reaction(message, "\u2714")
 
     elif message.content.startswith('{addspecial'):
-        args = message.content[11:]
+        args = message.content[12:]
         specials = []
         player = Player(message.author.id, message.author.mention)
         while args.find('|') >= 0:
             specials.append(args[:args.find('|')])
             args = args[args.find('|') + 1:]
-        specials.append(args)
+        specials.append(args.lstrip())
         await client.add_reaction(message, "\u2714")
         for i in specials:
             player.addSpecial(i)
@@ -646,4 +646,4 @@ class Battle:
         elif action == "lewd":
             player.lewd()
             return "*" + player.getWaifuQuote() + "* " + player.waifuname + " does lewd things to " + player.mention + "... ;)";
-client.run('Mzg1NjA2MTA2OTgzOTU2NDky.DV-eNA.mfuHkrJMwG5gk-0XRDYXu1xurvc')
+client.run('Mzg1NjA2MTA2OTgzOTU2NDky.DWc_Jw.1-uWOQr6d1geqeIUDPXYxqcGh0g')
