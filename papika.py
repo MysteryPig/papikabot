@@ -237,7 +237,7 @@ async def on_message(message):
         await client.send_message(message.channel, "If you have lots of waifu quotes and not many special moves, or vice versa, I might have trouble reading your file. This is because Balex is a useless shit.")
 
 
-    elif message.content.startswith('{setstats/////'):#notworking
+    elif message.content.startswith('{setstats'):#notworking
         player = Player(message.author.id, message.author.mention)
         if len(message.content) != 19:
             await client.send_message(message.channel, "Your command should be exactly 19 characters long. How do you even mess that up?")
@@ -256,12 +256,12 @@ async def on_message(message):
             await client.send_message(message.channel, "Can you even add? They have to equal 15, stupid.")
             print(result)
 
-    elif message.content.startswith('{setwaifu/////'):
+    elif message.content.startswith('{setwaifu'):
         player = Player(message.author.id, message.author.mention)
         player.setWaifuName(message.content[9])
         await client.add_reaction(message, "\u2714")
 
-    elif message.content.startswith('{addspecial/////'):
+    elif message.content.startswith('{addspecial'):
         args = message.content[11:]
         specials = []
         player = Player(message.author.id, message.author.mention)
@@ -273,7 +273,7 @@ async def on_message(message):
         for i in specials:
             player.addSpecial(i)
 
-    elif message.content.startswith('{addquote/////'):
+    elif message.content.startswith('{addquote'):
         args = message.content[11:]
         specials = []
         player = Player(message.author.id, message.author.mention)
@@ -494,16 +494,16 @@ class Player:
         return [self.power, self.defense, self.speed, self.luck, self.waifu]
     def write(self):
         with open("players/"+str(self.PID), 'r') as f, open("temp", 'w+') as fn:
-            fn.write(str(self.power).rstrip()+'\n')
-            fn.write(str(self.defense).rstrip()+'\n')
-            fn.write(str(self.speed).rstrip()+'\n')
-            fn.write(str(self.luck).rstrip()+'\n')
-            fn.write(str(self.waifu).rstrip()+'\n')
-            fn.write(str(self.waifuname).rstrip()+'\n')
+            fn.write(str(self.power)+'\n')
+            fn.write(str(self.defense)+'\n')
+            fn.write(str(self.speed)+'\n')
+            fn.write(str(self.luck)+'\n')
+            fn.write(str(self.waifu)+'\n')
+            fn.write(str(self.waifuname)+'\n')
             lines = f.readlines()
             for i in range(len(lines)):
-                if i > 5:
-                    fn.write(lines[i].rstrip()+'\n')
+                if i >= 5:
+                    fn.write(lines[i])
             self.trim()
         with open("players/"+str(self.PID), 'w+') as f, open("temp", 'r') as fn:
             print("Opened " + self.PID)
@@ -551,10 +551,10 @@ class Player:
         return line
     def addSpecial(self, move):
         with open("players/"+str(self.PID), 'a') as f:
-            f.write("s:"+move)
+            f.write("s:"+move+'\n')
     def addWaifuQuote(self, quote):
         with open("players/"+str(self.PID), 'a') as f:
-            f.write("w:"+quote)
+            f.write("w:"+quote+'\n')
     def setHealth(self, health = 100):
         self.health = health
     def takeDamage(self, damage):
