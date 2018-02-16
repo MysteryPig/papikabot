@@ -297,7 +297,7 @@ async def on_message(message):
             user = await client.get_user_info(w)
             result.append("#"+str(i)+": "+user.name+": "+str(people[w]))
             i+=1
-            if i >= 4:
+            if i > 5:
                 break
         for line in result:
             await client.send_message(message.channel, line)
@@ -646,4 +646,6 @@ class Battle:
         elif action == "lewd":
             player.lewd()
             return "*" + player.getWaifuQuote() + "* " + player.waifuname + " does lewd things to " + player.mention + "... ;)";
-client.run('Mzg1NjA2MTA2OTgzOTU2NDky.DWc_Jw.1-uWOQr6d1geqeIUDPXYxqcGh0g')
+with open('key') as f:
+    key = f.read().rstrip()
+    client.run(key)
