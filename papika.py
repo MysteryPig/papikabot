@@ -647,7 +647,7 @@ class Battle:
             player.lewd()
             return "*" + player.getWaifuQuote() + "* " + player.waifuname + " does lewd things to " + player.mention + "... ;)";
 
-class tOrDGame(self):
+class tOrDGame:
     #stati
     #players - waiting for more players
     #waiting - waiting for a question to be asked
@@ -699,16 +699,16 @@ class tOrDGame(self):
         elif self.status == "truth":
             ret = ""
             for pid in self.yetToRespond:
-                ret += await client.get_user_info(pid).name
-            return "Waiting for answers! " + ret
+                ret += pid 
+            return "Waiting for answers! {!" +  ret + "}"
         elif self.status == "dare":
             return "Waiting for someone to accept the dare with {tordaccept"
         elif self.status.startswith("w:"):
-            return await client.get_user_info(self.status[1:]).name + ", waiting on your prompt"
+            return "{!" + self.status[1:] + "}, waiting on your prompt"
         elif self.status.startswith("t:"):
-            return await client.get_user_info(self.status[1:]).name + ", waiting on your answer"
+            return "{!" + self.status[1:] + "}, waiting on your answer"
         elif self.status.startswith("d:"):
-            return await client.get_user_info(self.status[1:]).name + ", waiting on your confirmation"
+            return "{!" + self.status[1:] + "}, waiting on your confirmation"
 
 
 with open('key') as f:
